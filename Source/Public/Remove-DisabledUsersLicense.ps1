@@ -29,6 +29,13 @@ function Remove-DisabledUsersLicense {
     )
     
     begin {
+        if(Get-MsolDomain -ErrorAction SilentlyContinue) {
+            Write-Verbose -Message "You are connected to MS Online Services"
+        }
+        else {
+            Write-Error -Message "You are not connected to MS Online Services. User Connect-MsolService to get connected..."
+            Exit
+        }
         $users = Get-AdUser -Filter * | Where-Object Enabled -eq $false
     }
     
