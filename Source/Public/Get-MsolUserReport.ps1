@@ -67,7 +67,7 @@ function Get-MsolUserReport {
                 $Date = ($ZuleDateTime |Get-Date).ToString("yyyy-MM-dd")
                 $Time = ($ZuleDateTime |Get-Date).ToString("hh:mm")
             }
-
+            <#
             $Device = Get-AzureADAuditSignInLogs -Top 1 -Filter "userprincipalname eq '$($user.UserPrincipalName)'"
             if($Device){
                 $DeviceName = $Device.DeviceDetail.DisplayName
@@ -75,7 +75,8 @@ function Get-MsolUserReport {
                 $DeviceEnabled = (Get-MsolDevice -DeviceId $Device.DeviceDetail.DeviceId).Enabled
                 $DeviceLastLogon = ((Get-MsolDevice -DeviceId $Device.DeviceDetail.DeviceId).ApproximateLastLogonTimestamp |Get-Date).ToString("yyyy-MM-dd hh:mm")
             }
-            
+            #>
+
             $object = [PSCustomObject]@{
                 "UserPrincipalName" = $user.UserPrincipalName
                 "DisplayName" = $user.DisplayName
@@ -89,10 +90,10 @@ function Get-MsolUserReport {
                 "ValidationStatus" = $user.ValidationStatus
                 "LastLogonDate" = $Date
                 "LastLogonDateTime" = $Time
-                "DeviceName" = $DeviceName
-                "DeviceOS" = $DeviceOS
-                "DeviceEnabled" = $DeviceEnabled
-                "DeviceLastLogon" = $DeviceLastLogon
+                #"DeviceName" = $DeviceName
+                #"DeviceOS" = $DeviceOS
+                #"DeviceEnabled" = $DeviceEnabled
+                #"DeviceLastLogon" = $DeviceLastLogon
             }
             $UserObject.Add($object)
         }
