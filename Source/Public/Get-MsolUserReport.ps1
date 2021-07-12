@@ -46,30 +46,30 @@ function Get-MsolUserReport {
         Write-Verbose -Message "Make sure you are conneted to MSOnline and AzureAD"
 
         if($AllUsers.IsPresent){
-            $AllUsers = Get-MsolUser -All
+            $Users = Get-MsolUser -All
         }
         elseif($UserName){
-            $AllUsers = [PSCustomObject]@{
+            $Users = [PSCustomObject]@{
                 UserPrincipalName = $UserName
             }
         }
         elseif($ArrayOfUsers){
-            $AllUsers = $ArrayOfUsers
+            $Users = $ArrayOfUsers
         }
     }
     
     process {
         Write-Verbose -Message "Looping throgh users and collecting data"
         $UserObject = New-Object -TypeName System.Collections.ArrayList
-        foreach ($user in $AllUsers){
+        foreach ($user in $Users){
             $ZuleDateTime = $date = Get-AzureADAuditSignInLogs -Top 1 -Filter "userprincipalname eq '$($user.UserPrincipalName)'" | Select-Object -ExpandProperty CreatedDateTime
-            $Date = ($ZuleDateTime | Get-Date).ToString("yyyy-MM-dd")
-            $Time = ($ZuleDateTime | Get-Date).ToString("hh:mm")
+            $Date = ($ZuleDateTime |Get-Date).ToString("yyyy-MM-dd")
+            $Time = ($ZuleDateTime |Get-Date).ToString("hh:mm")
             $Device = Get-AzureADAuditSignInLogs -Top 1 -Filter "userprincipalname eq '$($user.UserPrincipalName)'"
             $DeviceName = $Device.DeviceDetail.DisplayName
             $DeviceOS = $Device.DeviceDetail.OperatingSystem
             $DeviceEnabled = (Get-MsolDevice -DeviceId $Device.DeviceDetail.DeviceId).Enabled
-            $DeviceLastLogon = ((Get-MsolDevice -DeviceId $Device.DeviceDetail.DeviceId).ApproximateLastLogonTimestamp | Get-Date).ToString("yyyy-MM-dd hh:mm")
+            $DeviceLastLogon = ((Get-MsolDevice -DeviceId $Device.DeviceDetail.DeviceId).ApproximateLastLogonTimestamp |Get-Date).ToString("yyyy-MM-dd hh:mm")
             $object = [PSCustomObject]@{
                 "UserPrincipalName" = $user.UserPrincipalName
                 "DisplayName" = $user.DisplayName
