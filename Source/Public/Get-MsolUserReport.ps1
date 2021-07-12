@@ -62,12 +62,13 @@ function Get-MsolUserReport {
         Write-Verbose -Message "Looping throgh users and collecting data"
         $UserObject = New-Object -TypeName System.Collections.ArrayList
         foreach ($user in $Users){
+            Write-Verbose -Message "Searching user: $($user.UserPrincipalName)"
             $ZuleDateTime = $date = Get-AzureADAuditSignInLogs -Top 1 -Filter "userprincipalname eq '$($user.UserPrincipalName)'" | Select-Object -ExpandProperty CreatedDateTime
             if($ZuleDateTime){
                 $Date = ($ZuleDateTime |Get-Date).ToString("yyyy-MM-dd")
                 $Time = ($ZuleDateTime |Get-Date).ToString("hh:mm")
             }
-            <#
+            <#Todo - Configure the report to gather data on the users device
             $Device = Get-AzureADAuditSignInLogs -Top 1 -Filter "userprincipalname eq '$($user.UserPrincipalName)'"
             if($Device){
                 $DeviceName = $Device.DeviceDetail.DisplayName
