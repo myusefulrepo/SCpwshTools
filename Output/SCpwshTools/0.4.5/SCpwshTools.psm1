@@ -103,6 +103,8 @@ function Get-MsolUserReport {
     
     begin {
         $modules = Get-Module -ListAvailable MSOnline, AzureADPreivew
+        $msolConnection = Get-MsolDomain -ErrorAction SilentlyContinue
+        $aadConnection = Get-AzureADTenantDetail -ErrorAction SilentlyContinue
         If($modules){
             Write-Verbose -Message "Required modules are installed"
         }
@@ -111,19 +113,12 @@ function Get-MsolUserReport {
             Exit
         }
 
-        if(Get-MsolDomain -ErrorAction SilentlyContinue){
-            Write-Verbose -Message "You are connected to MSOnline Services"
+        if(!$msolConnection -or !$aadConnection){
+            Write-Verbose -Message "You are connected to MSOnline Services or Azure AD"
         }
         else {
             Write-Error "You are not connected to MSOnline Services. Run Connect-MsolService, to get connected..."
             Exit
-        }
-
-        if(Get-AzureADTenantDetail -ErrorAction SilentlyContinue | Out-Null){
-            Write-Verbose -Message "You are successfully connected to AzureAD"
-        }
-        else {
-            Write-Error "You are not connected to AzureAD. Run Connect-AzureAD, to get conncted..."
         }
 
         if($AllUsers.IsPresent){
