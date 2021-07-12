@@ -128,6 +128,7 @@ function Get-MsolUserReport {
     process {
         Write-Verbose -Message "Looping throgh users and collecting data"
         $UserObject = New-Object -TypeName System.Collections.ArrayList
+        $i = 0
         foreach ($user in $Users){
             Write-Verbose -Message "Searching user: $($user.UserPrincipalName)"
             $ZuleDateTime = $date = Get-AzureADAuditSignInLogs -Top 1 -Filter "userprincipalname eq '$($user.UserPrincipalName)'" | Select-Object -ExpandProperty CreatedDateTime
@@ -143,7 +144,7 @@ function Get-MsolUserReport {
                 $DeviceEnabled = (Get-MsolDevice -DeviceId $Device.DeviceDetail.DeviceId).Enabled
                 $DeviceLastLogon = ((Get-MsolDevice -DeviceId $Device.DeviceDetail.DeviceId).ApproximateLastLogonTimestamp |Get-Date).ToString("yyyy-MM-dd hh:mm")
             }
-            #>
+            #> 
 
             $object = [PSCustomObject]@{
                 "UserPrincipalName" = $user.UserPrincipalName
@@ -164,6 +165,8 @@ function Get-MsolUserReport {
                 #"DeviceLastLogon" = $DeviceLastLogon
             }
             $UserObject.Add($object)
+            Write-Progress -Activity "Gathering Data" -Status "Progress:" -PercentComplete ($i/$Users.count*100)
+            $i++
         }
 
         if($CreateLogFile.IsPresent){
