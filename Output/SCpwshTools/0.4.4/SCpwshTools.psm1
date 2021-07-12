@@ -102,7 +102,8 @@ function Get-MsolUserReport {
     )
     
     begin {
-        If(Get-Module -ListAvailable MSOnline, AzureADPreivew | Out-Null){
+        $modules = Get-Module -ListAvailable MSOnline, AzureADPreivew
+        If($modules){
             Write-Verbose -Message "Required modules are installed"
         }
         else {
