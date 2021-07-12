@@ -63,13 +63,19 @@ function Get-MsolUserReport {
         $UserObject = New-Object -TypeName System.Collections.ArrayList
         foreach ($user in $Users){
             $ZuleDateTime = $date = Get-AzureADAuditSignInLogs -Top 1 -Filter "userprincipalname eq '$($user.UserPrincipalName)'" | Select-Object -ExpandProperty CreatedDateTime
-            $Date = ($ZuleDateTime |Get-Date).ToString("yyyy-MM-dd")
-            $Time = ($ZuleDateTime |Get-Date).ToString("hh:mm")
+            if($ZuleDateTime){
+                $Date = ($ZuleDateTime |Get-Date).ToString("yyyy-MM-dd")
+                $Time = ($ZuleDateTime |Get-Date).ToString("hh:mm")
+            }
+
             $Device = Get-AzureADAuditSignInLogs -Top 1 -Filter "userprincipalname eq '$($user.UserPrincipalName)'"
-            $DeviceName = $Device.DeviceDetail.DisplayName
-            $DeviceOS = $Device.DeviceDetail.OperatingSystem
-            $DeviceEnabled = (Get-MsolDevice -DeviceId $Device.DeviceDetail.DeviceId).Enabled
-            $DeviceLastLogon = ((Get-MsolDevice -DeviceId $Device.DeviceDetail.DeviceId).ApproximateLastLogonTimestamp |Get-Date).ToString("yyyy-MM-dd hh:mm")
+            if($Device){
+                $DeviceName = $Device.DeviceDetail.DisplayName
+                $DeviceOS = $Device.DeviceDetail.OperatingSystem
+                $DeviceEnabled = (Get-MsolDevice -DeviceId $Device.DeviceDetail.DeviceId).Enabled
+                $DeviceLastLogon = ((Get-MsolDevice -DeviceId $Device.DeviceDetail.DeviceId).ApproximateLastLogonTimestamp |Get-Date).ToString("yyyy-MM-dd hh:mm")
+            }
+            
             $object = [PSCustomObject]@{
                 "UserPrincipalName" = $user.UserPrincipalName
                 "DisplayName" = $user.DisplayName
