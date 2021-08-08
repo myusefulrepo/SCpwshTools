@@ -28,7 +28,8 @@ function New-PSPassword {
     .PARAMETER PasswordListFilePath
         The exact filepath to where the list of passwords should be store. See examples for how to use it.
     .NOTES
-        N/A
+        Created by Christian Hoejsager (ScriptingChris)
+        https://scriptingchris.tech
     #>
 
     [CmdletBinding()]
@@ -38,8 +39,8 @@ function New-PSPassword {
         [Switch]$UseUpperCase,
         [Parameter(ParameterSetName="Password", Mandatory=$false)]
         [Switch]$UseSymbols,
-        [Parameter(ParameterSetName="Password", Mandatory=$true)]
-        [Int]$PasswordLength,
+        [Parameter(ParameterSetName="Password", Mandatory=$false)]
+        [Int]$PasswordLength = 10,
         [Parameter(ParameterSetName="PasswordList", Mandatory=$false)]
         [Parameter(ParameterSetName="Password")]
         [Switch]$GenerateList,
