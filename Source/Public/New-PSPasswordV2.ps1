@@ -48,7 +48,6 @@ function New-PSPasswordV2 {
     )
     
     begin {
-
         if($SkipUpperCase.IsPresent -and $SkipLowerCase.IsPresent -and $SkipNumbers.IsPresent -and $SkipSymbols.IsPresent){
             Write-Error "You may not skip all four types of characters at the same time, try again..."
             Exit
@@ -71,7 +70,6 @@ function New-PSPasswordV2 {
     }
     
     process {
-
         if($PasswordsFilePath -and !(Test-Path $PasswordsFilePath)){
             New-Item $PasswordsFilePath -ItemType File
         }
