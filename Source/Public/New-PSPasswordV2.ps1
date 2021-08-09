@@ -1,4 +1,41 @@
 function New-PSPasswordV2 {
+        <#
+    .SYNOPSIS
+        PowerShell function for generating a single password or a list of passwords
+    .DESCRIPTION
+        PowerShell function which can be used for generating a single password or a list of passwords.
+        The password or passwords generated can be manipulated to define, length of password, and if 
+        symbols and/or upper case letters should be used.
+    .EXAMPLE
+        PS C:\> New-PSPassword
+        
+        This example will generate a 12 character long password containing lower/uppercase letters, numbers and symbols
+    .EXAMPLE
+        PS C:\> New-PSPassword -SkipUpperCase -SkipSymbols
+        
+        This example will generate a password without uppercase letters and symbols
+    .EXAMPLE
+        PS C:\> New-PSPassword -SkipUpperCase -PasswordLength 16 -NumberOfPasswords 200 -PasswordFilePath ~/pass.txt
+        
+        This example will generate list of 200 passwords without uppercase letters and a password length of 16 characters
+        it will store the passwords in the file ~/pass.txt
+    .PARAMETER SkipUpperCase
+        Define if the password should NOT contain uppercase letters
+    .PARAMETER SkipLowerCase
+        Define if the password should NOT contain lowercase letters
+    .PARAMETER SkipNumbers
+        Define if the password should NOT contain Numbers
+    .PARAMETER SkipSymbols
+        Define if the password should NOT contain Symbols
+    .PARAMETER PasswordLength
+        Define the length of the password in number of characters. The default password length will be 12
+    .PARAMETER PasswordFilePath
+        Define the exact path of where the list of passwords should be stored.
+
+    .NOTES
+        Created by Christian Hoejsager (ScriptingChris)
+        https://scriptingchris.tech
+    #>
     [CmdletBinding()]
     param (
         [Parameter(Mandatory=$false)][Switch]$SkipUpperCase,
@@ -11,6 +48,12 @@ function New-PSPasswordV2 {
     )
     
     begin {
+
+        if($SkipUpperCase.IsPresent -and $SkipLowerCase.IsPresent -and $SkipNumbers.IsPresent -and $SkipSymbols.IsPresent){
+            Write-Error "You may not skip all four types of characters at the same time, try again..."
+            Exit
+        }
+
         $CharArray = New-Object System.Collections.ArrayList
         $ValidatePass = New-Object System.Collections.ArrayList
 
