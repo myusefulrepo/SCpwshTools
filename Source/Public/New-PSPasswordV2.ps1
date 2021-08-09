@@ -9,7 +9,7 @@ function New-PSPasswordV2 {
     .EXAMPLE
         PS C:\> New-PSPassword
         
-        This example will generate a 12 character long password containing lower/uppercase letters, numbers and symbols
+        This example will generate a 16 character long password containing lower/uppercase letters, numbers and symbols
     .EXAMPLE
         PS C:\> New-PSPassword -SkipUpperCase -SkipSymbols
         
@@ -42,7 +42,7 @@ function New-PSPasswordV2 {
         [Parameter(Mandatory=$false)][Switch]$SkipLowerCase,
         [Parameter(Mandatory=$false)][Switch]$SkipNumbers,
         [Parameter(Mandatory=$false)][Switch]$SkipSymbols,
-        [Parameter(Mandatory=$false)][Int]$PasswordLength = 12,
+        [Parameter(Mandatory=$false)][Int]$PasswordLength = 16,
         [Parameter(Mandatory=$false)][Int]$NumberOfPasswords = 1,
         [Parameter(Mandatory=$false)][String]$PasswordsFilePath
     )
